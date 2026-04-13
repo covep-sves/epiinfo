@@ -488,6 +488,20 @@
 </div>
 
 <script>
+function toggleAcc(btn) {
+  const body = btn.nextElementSibling;
+  const isOpen = btn.classList.contains('open');
+  document.querySelectorAll('.acc-btn').forEach(function(b) {
+    b.classList.remove('open');
+    b.nextElementSibling.classList.remove('open');
+  });
+  if (!isOpen) {
+    btn.classList.add('open');
+    body.classList.add('open');
+  }
+}
+</script>
+<script>
 (function(){
   const toggle = document.getElementById('menuToggle');
   const sidebar = document.getElementById('sidebar');
@@ -497,20 +511,6 @@
   toggle.addEventListener('click', ()=> sidebar.classList.contains('open') ? closeMenu() : openMenu());
   overlay.addEventListener('click', closeMenu);
   document.querySelectorAll('#nav a').forEach(a => a.addEventListener('click', ()=> window.innerWidth<=768 && closeMenu()));
-  function toggleAcc(btn) {
-    const body = btn.nextElementSibling;
-    const isOpen = btn.classList.contains('open');
-    // fechar todos
-    document.querySelectorAll('.acc-btn').forEach(b => {
-      b.classList.remove('open');
-      b.nextElementSibling.classList.remove('open');
-    });
-    // abrir o clicado se estava fechado
-    if (!isOpen) {
-      btn.classList.add('open');
-      body.classList.add('open');
-    }
-  }
   const sections = document.querySelectorAll('.section');
   const links = document.querySelectorAll('#nav a');
   const observer = new IntersectionObserver(entries => {
