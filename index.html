@@ -226,6 +226,79 @@
     #sidebar,#menuToggle{display:none!important}
     #main{margin-left:0!important}
   }
+
+  /* ── ORGANOGRAMA ── */
+  .org-wrap{overflow-x:auto;padding:1rem 0 1.5rem}
+  .org-tree{display:flex;flex-direction:column;align-items:center;min-width:700px}
+  .org-node{
+    display:inline-flex;flex-direction:column;align-items:center;
+    position:relative;
+  }
+  .org-box{
+    padding:.4rem .85rem;border-radius:6px;
+    font-size:.72rem;font-weight:600;text-align:center;
+    cursor:pointer;user-select:none;
+    border:1.5px solid transparent;
+    transition:transform .15s,box-shadow .15s;
+    white-space:normal;max-width:160px;min-width:60px;line-height:1.3;
+  }
+  .org-box:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(27,92,107,.18)}
+  /* Níveis de cor */
+  .org-box.nivel-0{background:#1B5C6B;color:#fff;font-size:.78rem;padding:.5rem 1.2rem}
+  .org-box.nivel-1{background:#1E7A8C;color:#fff}
+  .org-box.nivel-2{background:#55AAAF;color:#fff}
+  .org-box.nivel-3{background:#f0f7f9;color:#1B5C6B;border-color:#90BC6F}
+  .org-box.nivel-4{background:#fff;color:#3a5a6a;border-color:#e2eaee;font-weight:500;font-size:.68rem}
+  .org-box.amarelo{background:#FDDF05;color:#1B5C6B;border-color:#D1D330}
+  /* Conectores */
+  .org-children{
+    display:flex;align-items:flex-start;gap:.6rem;
+    position:relative;padding-top:.8rem;
+  }
+  .org-children::before{
+    content:'';position:absolute;top:0;left:50%;
+    transform:translateX(-50%);
+    width:1px;height:.8rem;background:#90BC6F;
+  }
+  .org-node>.org-children{margin-top:0}
+  .org-child{
+    display:flex;flex-direction:column;align-items:center;
+    position:relative;padding-top:.8rem;
+  }
+  /* linha horizontal conectando irmãos */
+  .org-children.multi>.org-child::before{
+    content:'';position:absolute;top:0;left:50%;
+    transform:translateX(-50%);
+    width:1px;height:.8rem;background:#90BC6F;
+  }
+  .org-children.multi::after{
+    content:'';position:absolute;top:0;
+    left:calc(50% / var(--n, 1));
+    right:calc(50% / var(--n, 1));
+    height:1px;background:#90BC6F;
+  }
+  .org-hidden{display:none!important}
+  .org-toggle-hint{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.58rem;color:var(--muted);
+    text-align:center;margin-bottom:.5rem;
+  }
+  /* linha vertical de cada nó pai para filhos */
+  .org-connector{
+    width:1px;height:.7rem;background:#90BC6F;
+    margin:0 auto;
+  }
+  .org-hline-wrap{
+    display:flex;align-items:flex-start;
+    position:relative;
+  }
+  .org-hline-wrap::before{
+    content:'';
+    position:absolute;top:0;
+    left:calc(var(--left,0%));
+    right:calc(var(--right,0%));
+    height:1px;background:#90BC6F;
+  }
 </style>
 </head>
 <body>
@@ -244,6 +317,7 @@
     <a href="#" style="display:flex;align-items:center;gap:.4rem;padding:.6rem 1.2rem;font-size:.78rem;font-weight:600;color:var(--mid);text-decoration:none;border-bottom:1px solid var(--border);transition:background .15s" onmouseover="this.style.background='#f0f7f9'" onmouseout="this.style.background=''">⌂ Início</a>
     <div class="nav-section">Sobre</div>
     <a href="#sobre">A COVEP</a>
+    <a href="#organograma">Organograma</a>
     <div class="nav-section">Conteúdos</div>
     <a href="#boletins">Boletins Epidemiológicos</a>
     <a href="#paineis">Painéis Epidemiológicos</a>
@@ -343,7 +417,185 @@
       </div>
     </section>
 
-        <!-- BOLETINS -->
+    
+    <!-- ORGANOGRAMA -->
+    <section class="section" id="organograma">
+      <div class="section-header">
+        <h2>Organograma Funcional</h2>
+        <p>Clique nos nós para expandir ou recolher os ramos.</p>
+      </div>
+      <div class="org-wrap">
+        <div class="org-toggle-hint">Clique em qualquer caixa para expandir / recolher</div>
+        <div class="org-tree" id="orgTree">
+
+          <!-- SVES -->
+          <div class="org-node">
+            <div class="org-box nivel-0" onclick="orgToggle(this)">SVES</div>
+            <div class="org-children org-hidden">
+              <div class="org-child"><div class="org-box nivel-4" style="max-width:320px">Superintendência de Vigilância Epidemiológica e Sanitária</div></div>
+            </div>
+            <div class="org-connector"></div>
+
+            <!-- Sala Apoio Gabinete -->
+            <div class="org-box amarelo" style="margin-bottom:.5rem" onclick="orgToggle(this)">Sala de Apoio ao Gabinete</div>
+            <div class="org-connector"></div>
+
+            <!-- Nível 1 — SATE, SAMIS, ASSEJUR, NAED, RH, Transporte -->
+            <div class="org-children multi">
+              <div class="org-child">
+                <div class="org-box nivel-1" onclick="orgToggle(this)">SATE</div>
+                <div class="org-children org-hidden">
+                  <div class="org-child"><div class="org-box nivel-4">Sala de Apoio Técnico Especializado</div></div>
+                </div>
+              </div>
+              <div class="org-child">
+                <div class="org-box nivel-1" onclick="orgToggle(this)">SAMIS</div>
+                <div class="org-children org-hidden">
+                  <div class="org-child"><div class="org-box nivel-4">Sala de Apoio e Monitoramento das Informações e Indicadores de Saúde</div></div>
+                </div>
+              </div>
+              <div class="org-child">
+                <div class="org-box nivel-1" onclick="orgToggle(this)">ASSEJUR</div>
+                <div class="org-children org-hidden">
+                  <div class="org-child"><div class="org-box nivel-4">Assessoria Jurídica</div></div>
+                </div>
+              </div>
+              <div class="org-child">
+                <div class="org-box nivel-1" onclick="orgToggle(this)">NAED</div>
+                <div class="org-children org-hidden">
+                  <div class="org-child"><div class="org-box nivel-4">Núcleo de Ações Educativas</div></div>
+                </div>
+              </div>
+              <div class="org-child">
+                <div class="org-box nivel-1" onclick="orgToggle(this)">RH</div>
+                <div class="org-children org-hidden">
+                  <div class="org-child"><div class="org-box nivel-4">Setor de Recursos Humanos</div></div>
+                </div>
+              </div>
+              <div class="org-child">
+                <div class="org-box nivel-1" onclick="orgToggle(this)">Transporte</div>
+                <div class="org-children org-hidden">
+                  <div class="org-child"><div class="org-box nivel-4">Setor de Transporte</div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="org-connector" style="margin-top:.5rem"></div>
+
+            <!-- Coordenações — COVEP centralizada entre IST-AIDS-HV e COVIGIAMB -->
+            <div class="org-children multi">
+
+              <div class="org-child">
+                <div class="org-box nivel-2" onclick="orgToggle(this)">COVISA</div>
+                <div class="org-children org-hidden">
+                  <div class="org-child"><div class="org-box nivel-4">Coordenação de Vigilância Sanitária</div></div>
+                </div>
+              </div>
+
+              <div class="org-child">
+                <div class="org-box nivel-2" onclick="orgToggle(this)">IST-AIDS-HV</div>
+                <div class="org-children org-hidden">
+                  <div class="org-child"><div class="org-box nivel-4">Coordenação de IST, Aids e Hepatites Virais</div></div>
+                </div>
+              </div>
+
+              <!-- COVEP centralizada -->
+              <div class="org-child">
+                <div class="org-box nivel-2" style="background:#1B5C6B;font-weight:700;padding:.6rem 1rem" onclick="orgToggle(this)">COVEP</div>
+                <div class="org-children org-hidden" style="flex-direction:column;align-items:center">
+                  <div class="org-child" style="margin-bottom:.4rem"><div class="org-box nivel-4" style="max-width:280px;font-weight:600;color:#1B5C6B;pointer-events:none">Coordenação de Vigilância Epidemiológica</div></div>
+                  <div class="org-connector"></div>
+                  <div style="display:flex;gap:.6rem;align-items:flex-start">
+                  <div class="org-child">
+                    <div class="org-box nivel-2" onclick="orgToggle(this)">DICI</div>
+                    <div class="org-children org-hidden" style="flex-direction:column;align-items:center;gap:.4rem">
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">ESAVI — Programa de Vigilância dos Eventos Supostamente Atribuíveis à Vacinação ou Imunização</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">Rede de Frio</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">Suporte às Salas de Vacina</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">Brigada de Vacinação</div></div>
+                    </div>
+                  </div>
+                  <div class="org-child">
+                    <div class="org-box nivel-2" onclick="orgToggle(this)">DT</div>
+                    <div class="org-children org-hidden" style="flex-direction:column;align-items:center;gap:.4rem">
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">PMCA — Programa Municipal de Controle das Arboviroses</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">PMCT — Programa Municipal de Controle da Tuberculose</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">PMCH — Programa Municipal de Controle da Hanseníase</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">PMCE — Programa Municipal de Controle das Endemias</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">PMVVR — Programa Municipal de Vigilância aos Vírus Respiratórios</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">PVMLH — Programa de Vigilância das Meningites, Leptospirose e Hantavirose</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">DDTHA — Programa de Vigilância às Doenças Diarreicas e de Transmissão Hídrica e Alimentar</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">PMVIP — Programa de Vigilância às Doenças Imunopreveníveis e Acidentes por Animais Peçonhentos</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">PMVEP — Programa de Vigilância às Doenças Exantemáticas, Polio e PFA</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">PMVTx — Programa de Vigilância à Toxoplasmose Gestacional e Congênita</div></div>
+                    </div>
+                  </div>
+                  <div class="org-child">
+                    <div class="org-box nivel-2" onclick="orgToggle(this)">DSION</div>
+                    <div class="org-children org-hidden" style="flex-direction:column;align-items:center;gap:.4rem">
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">SIM — Sistema de Informações sobre Mortalidade</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">SINASC — Sistema de Informações sobre Nascidos Vivos</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">Vigilância dos Óbitos Maternos, Infantil, Fetal e de Mulher em Idade Fértil (MIF)</div></div>
+                    </div>
+                  </div>
+                  <div class="org-child">
+                    <div class="org-box nivel-2" onclick="orgToggle(this)">DANT</div>
+                    <div class="org-children org-hidden" style="flex-direction:column;align-items:center;gap:.4rem">
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">PVIA — Programa de Vigilância das Violências Interpessoal e Autoprovocada</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">PVT — Programa Vida no Trânsito</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">PV-DCNT — Programa de Vigilância das Doenças Crônicas Não Transmissíveis</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">PVIE — Programa de Vigilância das Intoxicações Exógenas</div></div>
+                    </div>
+                  </div>
+                  <div class="org-child">
+                    <div class="org-box nivel-2" onclick="orgToggle(this)">DCV</div>
+                    <div class="org-children org-hidden" style="flex-direction:column;align-items:center;gap:.4rem">
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">Entomologia (Laboratório e Campo)</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">Controle Ambiental</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">Malacologia (Laboratório e Campo)</div></div>
+                      <div class="org-child"><div class="org-box nivel-4" style="min-width:220px">Educação em Saúde para Controle Vetorial</div></div>
+                    </div>
+                  </div>
+                  </div><!-- /flex divisoes -->
+                </div>
+              </div>
+
+              <div class="org-child">
+                <div class="org-box nivel-2" onclick="orgToggle(this)">COVIGIAMB</div>
+                <div class="org-children org-hidden">
+                  <div class="org-child"><div class="org-box nivel-4">Coordenação de Vigilância em Saúde Ambiental</div></div>
+                </div>
+              </div>
+
+              <div class="org-child">
+                <div class="org-box nivel-2" onclick="orgToggle(this)">UVZ</div>
+                <div class="org-children org-hidden">
+                  <div class="org-child"><div class="org-box nivel-4">Coordenação da Unidade de Vigilância às Zoonoses</div></div>
+                </div>
+              </div>
+
+              <div class="org-child">
+                <div class="org-box nivel-2" onclick="orgToggle(this)">CEMSP</div>
+                <div class="org-children org-hidden">
+                  <div class="org-child"><div class="org-box nivel-4">Coordenação de Emergências em Saúde Pública</div></div>
+                </div>
+              </div>
+
+              <div class="org-child">
+                <div class="org-box nivel-2" onclick="orgToggle(this)">CEREST</div>
+                <div class="org-children org-hidden">
+                  <div class="org-child"><div class="org-box nivel-4">Coordenação do Centro de Referência em Saúde do Trabalhador(a)</div></div>
+                </div>
+              </div>
+
+            </div><!-- /coordenações -->
+          </div><!-- /SVES -->
+
+                </div><!-- /org-tree -->
+      </div>
+    </section>
+
+    <!-- BOLETINS -->
     <section class="section" id="boletins">
       <div class="section-header">
         <h2>Boletins Epidemiológicos</h2>
@@ -488,6 +740,11 @@
 </div>
 
 <script>
+function orgToggle(box) {
+  var children = box.nextElementSibling;
+  if (!children || !children.classList.contains('org-children')) return;
+  children.classList.toggle('org-hidden');
+}
 function toggleAcc(btn) {
   const body = btn.nextElementSibling;
   const isOpen = btn.classList.contains('open');
@@ -524,6 +781,17 @@ function toggleAcc(btn) {
   },{threshold:0.3});
   sections.forEach(s => observer.observe(s));
 })();
+
+  // ── ORGANOGRAMA ──
+  function orgToggle(box) {
+    const children = box.nextElementSibling;
+    if (!children || !children.classList.contains('org-children')) return;
+    children.classList.toggle('org-hidden');
+  }
+  // Expandir COVEP por padrão
+  document.addEventListener('DOMContentLoaded', function() {
+    // nada expandido por padrão — usuário clica para abrir
+  });
 </script>
 </body>
 </html>
